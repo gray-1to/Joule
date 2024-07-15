@@ -1,4 +1,4 @@
-async function main() {
+async function onClick() {
   //アクティブなタブを取得
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -6,13 +6,11 @@ async function main() {
     .executeScript({
       target: { tabId: tab.id },
       function: async function () {
-        async function fetchGPT35Turbo(text) {
-          console.log('excuting start')
+        async function saveForm(text) {
           return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage(
-              { type: "fetchGPT35Turbo_bg", text: text },
+              { type: "postForm", text: text },
               (response) => {
-                console.log('response back to popup.js', response)
                 if (chrome.runtime.lastError) {
                   reject(chrome.runtime.lastError.message);
                   return;
@@ -24,38 +22,27 @@ async function main() {
                 }
               }
             );
-          }).then((res)=>{
-            console.log('success!')
-            return res
+          }).then((res) => {
+            return res;
           });
-        };
+        }
 
         //titleタグのテキストを取得
-        var title = document.title.toString();
-
-        //titleをOpenAIに渡す
-        var text = title;
-        console.log('text', text);
-        var result = await fetchGPT35Turbo(text);
-        console.log('res in async', result);
-        console.log(result.content['id'])
-
+        const title = document.title.toString();
+        const result = await saveForm(title);
+        console.log("res in async", result);
         return result;
       },
     })
-    .then((results)=>{
-      console.log('results:', results);
-      const result = results[0].result
-      //実行結果をポップアップウィンドウへ表示
-      console.log('result', result.content['name'])
-      document.getElementById("result").innerHTML = result.content['name'];
+    .then((results) => {
+      const result = results[0].result;
+      document.getElementById("result").innerHTML = result.content["name"];
     })
-    .catch((error)=>{
-      console.log('error', error)
+    .catch((error) => {
+      console.log("error", error);
     });
-  console.log('finish')
 }
 
 document.getElementById("btn").addEventListener("click", async () => {
-  main();
+  onClick();
 });
