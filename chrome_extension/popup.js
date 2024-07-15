@@ -38,15 +38,17 @@ async function main() {
         console.log('text', text);
         var result = await fetchGPT35Turbo(text);
         console.log('res in async', result);
-        console.log('content', result.content.toString())
+        console.log(result.content['id'])
 
         return result;
       },
     })
-    .then((r)=>{
+    .then((results)=>{
+      console.log('results:', results);
+      const result = results[0].result
       //実行結果をポップアップウィンドウへ表示
-      console.log('result', r)
-      document.getElementById("result").innerHTML = r[0].result;
+      console.log('result', result.content['name'])
+      document.getElementById("result").innerHTML = result.content['name'];
     })
     .catch((error)=>{
       console.log('error', error)

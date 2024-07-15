@@ -14,3 +14,8 @@ docker compose exec app npm install
 ```
 - [http://localhost:3000]にアクセスするとアプリが表示される
 
+## 拡張機能
+1. Joule/chrome_extensionのディレクトリをGoogle Chromeブラウザの拡張機能>パッケージ化されていない拡張機能を読み込むから読み込む
+2. (デバッグ用)Google Chromeブラウザの拡張機能でJouleの部分に「ビューを検証 Service Worker」とあるのでクリックしてバックグラウンドのコンソールを表示
+3. 右上の拡張機能一覧で「許可を求めている拡張機能」として「Joule」があるのでクリックして有効化する
+4. 右上の拡張機能一覧でJouleをクリックすると実行される
