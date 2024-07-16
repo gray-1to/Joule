@@ -1,6 +1,7 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "postForm") {
-    postForm(request.text)
+    console.log("postForm requested")
+    postForm(request.text, request.body)
       .then((content) => {
         sendResponse({ success: true, content: content });
       })
@@ -11,14 +12,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-async function postForm(text) {
+async function postForm(text, body) {
   const response = await fetch("http://localhost:3000/api/parse_form", {
     method: "POST",
     mode: "cors",
     headers:{
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({title: text}),
+    body: JSON.stringify({title: text, body: body}),
   });
 
   if (!response.ok) {

@@ -6,10 +6,10 @@ async function onClick() {
     .executeScript({
       target: { tabId: tab.id },
       function: async function () {
-        async function saveForm(text) {
+        async function saveForm(text, body) {
           return new Promise((resolve, reject) => {
             chrome.runtime.sendMessage(
-              { type: "postForm", text: text },
+              { type: "postForm", text: text, body: body },
               (response) => {
                 if (chrome.runtime.lastError) {
                   reject(chrome.runtime.lastError.message);
@@ -27,9 +27,10 @@ async function onClick() {
           });
         }
 
-        //titleタグのテキストを取得
+        //ページのタイトルとHTMLを取得
         const title = document.title.toString();
-        const result = await saveForm(title);
+        const body = document.body.innerHTML;
+        const result = await saveForm(title, body);
         console.log("res in async", result);
         return result;
       },
